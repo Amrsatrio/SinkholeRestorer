@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "sinkhole-restorer",
+	"version": "${version}",
+	"name": "Sinkhole Restorer",
+	"description": "Restores glitched aquifers in valleys (aka sinkholes) in 1.19.3+",
+	"authors": [
+		"Amrsatrio"
+	],
+	"contact": {
+		"homepage": "https://github.com/Amrsatrio/SinkholeRestorer",
+		"issues": "https://github.com/Amrsatrio/SinkholeRestorer/issues",
+		"sources": "https://github.com/Amrsatrio/SinkholeRestorer"
+	},
+	"license": "MIT",
+	"icon": "assets/sinkhole-restorer/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"mod.amrsatrio.sinkholerestorer.SinkholeRestorer"
+		]
+	},
+	"mixins": [
+		"sinkhole-restorer.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=${loader_version}",
+		"minecraft": "${minecraft_range}",
+		"java": ">=${required_java_int}"
+	}
+}
