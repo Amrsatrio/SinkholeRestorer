@@ -1,0 +1,27 @@
+license = "MIT"
+
+[[mods]]
+modId = "sinkhole_restorer"
+version = "${version}"
+displayName = "Sinkhole Restorer"
+description = "Restores glitched aquifers in valleys (aka sinkholes) in 1.19.3+"
+authors = "Amrsatrio"
+displayURL = "https://github.com/Amrsatrio/SinkholeRestorer"
+logoFile = "assets/sinkhole-restorer/icon.png"
+
+[[mixins]]
+config = "sinkhole-restorer.mixins.json"
+
+[[dependencies.sinkhole_restorer]]
+modId = "neoforge"
+type = "required"
+versionRange = "[${forgelike_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.sinkhole_restorer]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraft_range}"
+ordering = "NONE"
+side = "BOTH"
