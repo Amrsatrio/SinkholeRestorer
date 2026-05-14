@@ -51,6 +51,9 @@ jobs:
         with:
           cache-provider: 'basic'
 
+      - name: Make gradle wrapper executable
+        run: chmod +x ./gradlew
+
       - name: Build with Gradle
         run: |
           ./gradlew "Refresh active project" --configuration-cache
