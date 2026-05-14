@@ -24,5 +24,13 @@ plugins {
 }
 
 stonecutter {
-    create(rootProject, file("versions.json"))
+    val ciSingleBuild: String? = System.getenv("CI_SINGLE_BUILD")
+    if (ciSingleBuild != null) {
+        val split = ciSingleBuild.split(":")
+        create(rootProject) {
+            version(split[0], split[1]).buildscript(split[2])
+        }
+    } else {
+        create(rootProject, file("versions.json"))
+    }
 }

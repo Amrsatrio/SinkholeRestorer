@@ -100,6 +100,17 @@ tasks.jar {
     }
 }
 
+tasks.register<Copy>("buildAndCollect") {
+    group = "build"
+    description = "Builds and copies artifacts into root build directory"
+    from(layout.buildDirectory.dir("libs")) {
+        include("*.jar")
+        exclude("*-sources.jar")
+    }
+    into(rootProject.layout.buildDirectory.dir("libs"))
+    dependsOn("build")
+}
+
 publishMods {
     file = if (isUnobfuscated) {
         tasks.jar.map { it.archiveFile.get() }

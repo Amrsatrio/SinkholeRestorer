@@ -1,0 +1,84 @@
+name: build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  generate-build-matrix:
+    runs-on: ubuntu-latest
+    name: Generate build matrix
+
+    outputs:
+      matrix: ${{ steps.generate-matrix.outputs.matrix }}
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Get versions
+        id: generate-matrix
+        run: |
+          MATRIX=$(jq -c '{include: (.versions | map({target: ., name: (split(":")[0])}))}' ./versions.json)
+          echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
+
+  build:
+    name: Build ${{ matrix.name }}
+    needs: generate-build-matrix
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.generate-build-matrix.outputs.matrix) }}
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-provider: 'basic'
+
+      - name: Build with Gradle
+        run: |
+          ./gradlew "Refresh active project" --configuration-cache
+          ./gradlew buildAndCollect --configuration-cache
+        env:
+          CI_SINGLE_BUILD: ${{ matrix.target }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.name }}
+          path: build/libs/*.jar
+          archive: false
+
+      - name: Publish to Modrinth
+        if: github.event_name == 'push' && github.ref_type == 'tag'
+        run: |
+          ./gradlew publishMods --configuration-cache
+        env:
+          CI_SINGLE_BUILD: ${{ matrix.target }}
+          MODRINTH_API_KEY: ${{ secrets.MODRINTH_API_KEY }}
+
+      - name: Publish to GitHub releases
+        uses: softprops/action-gh-release@v3.0.0
+        if: github.event_name == 'push' && github.ref_type == 'tag'
+        with:
+          prerelease: false
+          body_path: CHANGELOG.md
+          files: build/libs/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
