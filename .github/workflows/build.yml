@@ -5,6 +5,9 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   generate-build-matrix:
     runs-on: ubuntu-latest
@@ -80,7 +83,6 @@ jobs:
         uses: softprops/action-gh-release@v3.0.0
         if: github.event_name == 'push' && github.ref_type == 'tag'
         with:
-          prerelease: false
           body_path: CHANGELOG.md
           files: build/libs/*.jar
         env:
