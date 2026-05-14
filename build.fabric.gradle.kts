@@ -1,8 +1,10 @@
+import me.modmuss50.mpp.ReleaseType
 import net.fabricmc.loom.api.LoomGradleExtensionAPI
 
 plugins {
     id("net.fabricmc.fabric-loom-remap") apply false
     id("net.fabricmc.fabric-loom") apply false
+    id("me.modmuss50.mod-publish-plugin") version "2.0.0-beta.1"
 }
 
 val isUnobfuscated = sc.current.parsed.matches(">=26.1")
@@ -13,7 +15,7 @@ if (isUnobfuscated) {
     apply(plugin = "net.fabricmc.fabric-loom-remap")
 }
 
-version = "${project.property("mod_version")}+${sc.current.project}"
+version = "${project.property("mod_version")}+${sc.current.version}"
 group = project.property("maven_group") as String
 
 base {
@@ -58,10 +60,17 @@ val (requiredJava, requiredJavaInt) = when {
 }
 
 tasks.processResources {
+    val minecraftRangeStart = project.property("minecraft_range_start") as String
+    val minecraftRangeEnd = (project.findProperty("minecraft_range_end") as? String)?.takeIf { it != "latest" }
+    val minecraftRange = if (minecraftRangeEnd != null) {
+        ">=$minecraftRangeStart <=$minecraftRangeEnd"
+    } else {
+        ">=$minecraftRangeStart"
+    }
     val properties = mapOf(
         "version" to project.version,
         "loader_version" to project.property("loader_version"),
-        "minecraft_range" to project.property("minecraft_range"),
+        "minecraft_range" to minecraftRange,
         "required_java_int" to requiredJavaInt.toString(),
     )
     inputs.properties(properties)
@@ -88,5 +97,29 @@ tasks.jar {
 
     from("LICENSE") {
         rename { "${it}_${inputs.properties["archivesName"]}"}
+    }
+}
+
+publishMods {
+    file = if (isUnobfuscated) {
+        tasks.jar.map { it.archiveFile.get() }
+    } else {
+        tasks.named<org.gradle.jvm.tasks.Jar>("remapJar").map { it.archiveFile.get() }
+    }
+
+    type = ReleaseType.STABLE
+    displayName = "Sinkhole Restorer ${project.property("mod_version")} for Fabric ${stonecutter.current.version}"
+    version = project.version.toString() + "-fabric"
+    changelog = provider { rootProject.file("CHANGELOG.md").readText() }
+    modLoaders.add("fabric")
+
+    modrinth {
+        projectId = project.property("modrinth_project_id") as String
+        accessToken = providers.environmentVariable("MODRINTH_API_KEY")
+
+        minecraftVersionRange {
+            start = project.property("minecraft_range_start") as String
+            end = (project.findProperty("minecraft_range_end") as? String) ?: "latest"
+        }
     }
 }

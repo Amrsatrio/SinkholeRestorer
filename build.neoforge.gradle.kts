@@ -1,5 +1,8 @@
+import me.modmuss50.mpp.ReleaseType
+
 plugins {
     id("net.neoforged.moddev")
+    id("me.modmuss50.mod-publish-plugin") version "2.0.0-beta.1"
 }
 
 // val isUnobfuscated = sc.current.parsed.matches(">=26.1")
@@ -45,10 +48,17 @@ val (requiredJava, requiredJavaInt) = when {
 }
 
 tasks.processResources {
+    val minecraftRangeStart = project.property("minecraft_range_start") as String
+    val minecraftRangeEnd = (project.findProperty("minecraft_range_end") as? String)?.takeIf { it != "latest" }
+    val minecraftRange = if (minecraftRangeEnd != null) {
+        "[$minecraftRangeStart,$minecraftRangeEnd]"
+    } else {
+        "[$minecraftRangeStart)"
+    }
     val properties = mapOf(
         "version" to project.version,
         "forgelike_version" to project.property("forgelike_version"),
-        "minecraft_range" to project.property("minecraft_range"),
+        "minecraft_range" to minecraftRange,
     )
     inputs.properties(properties)
     filesMatching("META-INF/neoforge.mods.toml") {
@@ -74,5 +84,25 @@ tasks.jar {
 
     from("LICENSE") {
         rename { "${it}_${inputs.properties["archivesName"]}"}
+    }
+}
+
+publishMods {
+    file = tasks.jar.map { it.archiveFile.get() }
+
+    type = ReleaseType.STABLE
+    displayName = "Sinkhole Restorer ${project.property("mod_version")} for NeoForge ${stonecutter.current.version}"
+    version = project.version.toString() + "-neoforge"
+    changelog = provider { rootProject.file("CHANGELOG.md").readText() }
+    modLoaders.add("neoforge")
+
+    modrinth {
+        projectId = project.property("modrinth_project_id") as String
+        accessToken = providers.environmentVariable("MODRINTH_API_KEY")
+
+        minecraftVersionRange {
+            start = project.property("minecraft_range_start") as String
+            end = (project.findProperty("minecraft_range_end") as? String) ?: "latest"
+        }
     }
 }

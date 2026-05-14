@@ -1,23 +1,29 @@
 ["26.1-fabric"]
 fabric_api_version = "0.145.1+26.1"
-minecraft_range = ">=26.1"
+minecraft_range_start = "26.1"
+minecraft_range_end = "latest"
 
 ["26.1-neoforge"]
 forgelike_version = "26.1.0.19-beta"
-minecraft_range = "[26.1,)"
+minecraft_range_start = "26.1"
+minecraft_range_end = "latest"
 
 ["1.21.9-fabric"]
 fabric_api_version = "0.134.1+1.21.9"
-minecraft_range = ">=1.21.9 <=1.21.11"
+minecraft_range_start = "1.21.9"
+minecraft_range_end = "1.21.11"
 
 ["1.21.9-neoforge"]
 forgelike_version = "21.9.16-beta"
-minecraft_range = "[1.21.9,1.21.11]"
+minecraft_range_start = "1.21.9"
+minecraft_range_end = "1.21.11"
 
 ["1.20.6-neoforge"] # NeoForge only
 forgelike_version = "20.6.139"
-minecraft_range = "[1.20.6,1.21.8]"
+minecraft_range_start = "1.20.6"
+minecraft_range_end = "1.21.8"
 
 ["1.19.3-fabric"] # Fabric only
 fabric_api_version = "0.76.1+1.19.3"
-minecraft_range = ">=1.19.3 <=1.21.8"
+minecraft_range_start = "1.19.3"
+minecraft_range_end = "1.21.8"
