@@ -109,8 +109,9 @@ publishMods {
         accessToken = providers.environmentVariable("MODRINTH_API_KEY")
 
         minecraftVersionRange {
-            start = project.property("minecraft_range_start") as String
-            end = (project.findProperty("minecraft_range_end") as? String) ?: "latest"
+            start = project.property("minecraft_range_start_publish") as String
+            end = (project.findProperty("minecraft_range_end_publish") as? String) ?: "latest"
+            includeSnapshots = true
         }
     }
 }
