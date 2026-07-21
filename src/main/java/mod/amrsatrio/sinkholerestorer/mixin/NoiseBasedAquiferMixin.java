@@ -31,7 +31,7 @@ public class NoiseBasedAquiferMixin {
         if (Arrays.deepEquals(SURFACE_SAMPLING_OFFSETS_IN_CHUNKS, sinkholeRestorer$SURFACE_SAMPLING_OFFSETS_IN_CHUNKS_1_19_3)) {
             SURFACE_SAMPLING_OFFSETS_IN_CHUNKS = sinkholeRestorer$SURFACE_SAMPLING_OFFSETS_IN_CHUNKS_PRE_1_19_3;
         } else {
-            throw new RuntimeException("Aquifer.NoiseBasedAquifer.SURFACE_SAMPLING_OFFSETS_IN_CHUNKS has been updated since 1.19.3, and this mod needs an update to work!");
+            throw new RuntimeException("Aquifer.NoiseBasedAquifer.SURFACE_SAMPLING_OFFSETS_IN_CHUNKS has changed since 1.19.3. This mod must be updated to continue working.");
         }
     }
 
