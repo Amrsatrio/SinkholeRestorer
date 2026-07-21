@@ -1,1 +1,3 @@
-Initial release.
+- Added Forge 1.19.3-1.20.4 variant. (6f44905)
+- Ported to 26.2-snapshot-4. (8b89667)
+- NeoForge builds have been tested to work now. (#1) (6f44905)
