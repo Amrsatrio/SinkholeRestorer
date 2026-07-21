@@ -1,7 +1,7 @@
 import me.modmuss50.mpp.ReleaseType
 
 plugins {
-    id("net.neoforged.moddev")
+    id("net.neoforged.moddev.legacyforge")
     id("me.modmuss50.mod-publish-plugin") version "2.0.0-beta.1"
 }
 
@@ -11,13 +11,17 @@ version = "${project.property("mod_version")}+${sc.current.version}"
 group = project.property("maven_group") as String
 
 base {
-    archivesName = project.property("archives_base_name") as String + "-neoforge"
+    archivesName = project.property("archives_base_name") as String + "-forge"
 }
 
 repositories {
 }
 
-neoForge {
+dependencies {
+    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
+}
+
+legacyForge {
     version = project.property("forgelike_version") as String
     validateAccessTransformers = true
 
@@ -37,6 +41,11 @@ neoForge {
             sourceSet(sourceSets["main"])
         }
     }
+}
+
+mixin {
+    add(sourceSets.getByName("main"), "sinkhole-restorer.mixins.refmap.json")
+    config("sinkhole-restorer.mixins.json")
 }
 
 val (requiredJava, requiredJavaInt) = when {
@@ -61,11 +70,11 @@ tasks.processResources {
         "minecraft_range" to minecraftRange,
     )
     inputs.properties(properties)
-    filesMatching("META-INF/neoforge.mods.toml") {
+    filesMatching("META-INF/mods.toml") {
         expand(properties)
     }
 
-    exclude("**/fabric.mod.json", "**/*.accesswidener", "**/mods.toml")
+    exclude("**/fabric.mod.json", "**/*.accesswidener", "**/neoforge.mods.toml")
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -85,24 +94,28 @@ tasks.jar {
     from("LICENSE") {
         rename { "${it}_${inputs.properties["archivesName"]}"}
     }
+
+    manifest.attributes(mapOf(
+        "MixinConfigs" to "sinkhole-restorer.mixins.json"
+    ))
 }
 
 tasks.register<Copy>("buildAndCollect") {
     group = "build"
     description = "Builds and copies artifacts into root build directory"
-    from(tasks.jar.flatMap { it.archiveFile })
+    from(tasks.named<org.gradle.jvm.tasks.Jar>("reobfJar").flatMap { it.archiveFile })
     into(rootProject.layout.buildDirectory.dir("libs"))
     dependsOn("build")
 }
 
 publishMods {
-    file = tasks.jar.flatMap { it.archiveFile }
+    file = tasks.named<org.gradle.jvm.tasks.Jar>("reobfJar").flatMap { it.archiveFile }
 
     type = ReleaseType.STABLE
-    displayName = "Sinkhole Restorer ${project.property("mod_version")} for NeoForge ${stonecutter.current.version}"
-    version = project.version.toString() + "-neoforge"
+    displayName = "Sinkhole Restorer ${project.property("mod_version")} for Forge ${stonecutter.current.version}"
+    version = project.version.toString() + "-forge"
     changelog = provider { rootProject.file("CHANGELOG.md").readText() }
-    modLoaders.add("neoforge")
+    modLoaders.add("forge")
 
     modrinth {
         projectId = project.property("modrinth_project_id") as String

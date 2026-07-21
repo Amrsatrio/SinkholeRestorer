@@ -16,6 +16,7 @@ pluginManagement {
         id("net.fabricmc.fabric-loom-remap") version loom_version
         id("net.fabricmc.fabric-loom") version loom_version
         id("net.neoforged.moddev") version neoforge_moddev_version
+        id("net.neoforged.moddev.legacyforge") version neoforge_moddev_version
     }
 }
 

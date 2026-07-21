@@ -15,15 +15,15 @@ logoFile = "assets/sinkhole-restorer/icon.png"
 config = "sinkhole-restorer.mixins.json"
 
 [[dependencies.sinkhole_restorer]]
-modId = "neoforge"
-type = "required"
+modId = "forge"
+mandatory = true
 versionRange = "[${forgelike_version},)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.sinkhole_restorer]]
 modId = "minecraft"
-type = "required"
+mandatory = true
 versionRange = "${minecraft_range}"
 ordering = "NONE"
 side = "BOTH"

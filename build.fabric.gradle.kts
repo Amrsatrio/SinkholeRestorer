@@ -103,20 +103,13 @@ tasks.jar {
 tasks.register<Copy>("buildAndCollect") {
     group = "build"
     description = "Builds and copies artifacts into root build directory"
-    from(layout.buildDirectory.dir("libs")) {
-        include("*.jar")
-        exclude("*-sources.jar")
-    }
+    from((if (isUnobfuscated) tasks.jar else tasks.named<org.gradle.jvm.tasks.Jar>("remapJar")).flatMap { it.archiveFile })
     into(rootProject.layout.buildDirectory.dir("libs"))
     dependsOn("build")
 }
 
 publishMods {
-    file = if (isUnobfuscated) {
-        tasks.jar.map { it.archiveFile.get() }
-    } else {
-        tasks.named<org.gradle.jvm.tasks.Jar>("remapJar").map { it.archiveFile.get() }
-    }
+    file = (if (isUnobfuscated) tasks.jar else tasks.named<org.gradle.jvm.tasks.Jar>("remapJar")).flatMap { it.archiveFile }
 
     type = ReleaseType.STABLE
     displayName = "Sinkhole Restorer ${project.property("mod_version")} for Fabric ${stonecutter.current.version}"
@@ -131,6 +124,7 @@ publishMods {
         minecraftVersionRange {
             start = project.property("minecraft_range_start") as String
             end = (project.findProperty("minecraft_range_end") as? String) ?: "latest"
+            includeSnapshots = true
         }
     }
 }

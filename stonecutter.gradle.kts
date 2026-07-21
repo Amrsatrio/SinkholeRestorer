@@ -10,5 +10,5 @@ if (ciSingleBuild != null) {
 }
 
 stonecutter parameters {
-    constants.match(node.metadata.project.substringAfterLast('-'), "fabric", "neoforge")
+    constants.match(node.metadata.project.substringAfterLast('-'), "fabric", "neoforge", "forge")
 }

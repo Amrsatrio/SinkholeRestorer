@@ -2,10 +2,10 @@
   "$schema": "https://stonecutter.kikugie.dev/settings-schema/latest.json",
   "versions": [
     "26.1-fabric:26.1:build.fabric.gradle.kts",
-    "26.1-neoforge:26.1:build.neoforge.gradle.kts",
     "1.21.9-fabric:1.21.9:build.fabric.gradle.kts",
     "1.21.9-neoforge:1.21.9:build.neoforge.gradle.kts",
     "1.20.6-neoforge:1.20.6:build.neoforge.gradle.kts",
+    "1.19.3-forge:1.19.3:build.forge.gradle.kts",
     "1.19.3-fabric:1.19.3:build.fabric.gradle.kts"
   ]
 }
