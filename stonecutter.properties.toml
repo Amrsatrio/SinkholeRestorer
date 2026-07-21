@@ -1,7 +1,12 @@
+["26.3-fabric"]
+fabric_api_version = "0.155.2+26.3"
+minecraft_range_start = "26.3-alpha.4"
+minecraft_range_end = "latest"
+
 ["26.1-fabric"]
 fabric_api_version = "0.145.1+26.1"
 minecraft_range_start = "26.1"
-minecraft_range_end = "latest"
+minecraft_range_end = "26.3-alpha.3"
 
 ["1.21.9-fabric"]
 fabric_api_version = "0.134.1+1.21.9"

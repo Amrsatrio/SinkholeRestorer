@@ -1,10 +1,7 @@
 package mod.amrsatrio.sinkholerestorer.mixin;
 
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.levelgen.Aquifer;
-import net.minecraft.world.level.levelgen.NoiseChunk;
-import net.minecraft.world.level.levelgen.NoiseRouter;
-import net.minecraft.world.level.levelgen.PositionalRandomFactory;
+import net.minecraft.world.level.levelgen.*;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -41,15 +38,15 @@ public class NoiseBasedAquiferMixin {
 //? if >=1.21.9 {
     // 1.21.9+ updated min/max calculation in the constructor, restore to original behavior
 
-    /*private static int oldGridX(final int blockCoord) {
+    /*private static int oldGridX(int blockCoord) {
         return blockCoord >> 4; // previously Math.floorDiv(blockCoord, 16);
     }
 
-    private static int oldGridY(final int blockCoord) {
+    private static int oldGridY(int blockCoord) {
         return Math.floorDiv(blockCoord, 12);
     }
 
-    private static int oldGridZ(final int blockCoord) {
+    private static int oldGridZ(int blockCoord) {
         return blockCoord >> 4; // previously Math.floorDiv(blockCoord, 16);
     }
 
@@ -109,9 +106,18 @@ public class NoiseBasedAquiferMixin {
     // Overwrite this to Integer.MAX_VALUE to disable the skipSamplingAboveY feature entirely
     @Inject(method = "<init>", at = @At("RETURN"))
     private void sinkholeRestorer$disableSkipSamplingAboveY(
-            final NoiseChunk noiseChunk, final ChunkPos pos, final NoiseRouter router,
-            final PositionalRandomFactory positionalRandomFactory, final int minBlockY, final int yBlockSize,
-            final Aquifer.FluidPicker globalFluidPicker, CallbackInfo ci) {
+            NoiseChunk noiseChunk,
+            ChunkPos pos,
+//? if >=26.3-alpha.4 {
+            /*Aquifer.Config config,
+*///? } else {
+            NoiseRouter router,
+//? }
+            PositionalRandomFactory positionalRandomFactory,
+            int minBlockY,
+            int yBlockSize,
+            Aquifer.FluidPicker globalFluidPicker,
+            CallbackInfo ci) {
         this.skipSamplingAboveY = Integer.MAX_VALUE;
     }
 //? }
