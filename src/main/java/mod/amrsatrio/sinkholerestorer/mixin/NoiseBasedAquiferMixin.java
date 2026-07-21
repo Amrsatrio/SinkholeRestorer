@@ -35,7 +35,7 @@ public class NoiseBasedAquiferMixin {
         }
     }
 
-//? if >=1.21.9 {
+//? if >=1.21.9-alpha.25.31.a {
     // 1.21.9+ updated min/max calculation in the constructor, restore to original behavior
 
     /*private static int oldGridX(int blockCoord) {
