@@ -1,6 +1,5 @@
 package mod.amrsatrio.sinkholerestorer.mixin;
 
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.levelgen.*;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -105,19 +104,7 @@ public class NoiseBasedAquiferMixin {
 
     // Overwrite this to Integer.MAX_VALUE to disable the skipSamplingAboveY feature entirely
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void sinkholeRestorer$disableSkipSamplingAboveY(
-            NoiseChunk noiseChunk,
-            ChunkPos pos,
-//? if >=26.3-alpha.4 {
-            /*Aquifer.Config config,
-*///? } else {
-            NoiseRouter router,
-//? }
-            PositionalRandomFactory positionalRandomFactory,
-            int minBlockY,
-            int yBlockSize,
-            Aquifer.FluidPicker globalFluidPicker,
-            CallbackInfo ci) {
+    private void sinkholeRestorer$disableSkipSamplingAboveY(CallbackInfo ci) {
         this.skipSamplingAboveY = Integer.MAX_VALUE;
     }
 //? }

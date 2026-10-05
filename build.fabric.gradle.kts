@@ -7,6 +7,9 @@ plugins {
     id("me.modmuss50.mod-publish-plugin") version "2.0.0-beta.1"
 }
 
+// For snapshot versions, pass SemVer-compatible Minecraft version into Stonecutter (e.g. 26.3-alpha.4) and set
+// minecraft_server property to the actual Minecraft version name (e.g. 26.3-snapshot-4).
+val minecraftVersion = project.findProperty("minecraft_version")?.toString() ?: sc.current.version
 val isUnobfuscated = sc.current.parsed.matches(">=26.1")
 
 if (isUnobfuscated) {
@@ -15,7 +18,7 @@ if (isUnobfuscated) {
     apply(plugin = "net.fabricmc.fabric-loom-remap")
 }
 
-version = "${project.property("mod_version")}+${sc.current.version}"
+version = "${project.property("mod_version")}+$minecraftVersion"
 group = project.property("maven_group") as String
 
 base {
@@ -36,7 +39,7 @@ configure<LoomGradleExtensionAPI> {
 }
 
 dependencies {
-    "minecraft"("com.mojang:minecraft:${sc.current.version}")
+    "minecraft"("com.mojang:minecraft:$minecraftVersion")
 
     if (!isUnobfuscated) {
         val loom = project.extensions.getByType<LoomGradleExtensionAPI>()
@@ -112,7 +115,7 @@ publishMods {
     file = (if (isUnobfuscated) tasks.jar else tasks.named<org.gradle.jvm.tasks.Jar>("remapJar")).flatMap { it.archiveFile }
 
     type = ReleaseType.STABLE
-    displayName = "Sinkhole Restorer ${project.property("mod_version")} for Fabric ${stonecutter.current.version}"
+    displayName = "Sinkhole Restorer ${project.property("mod_version")} for Fabric $minecraftVersion"
     version = project.version.toString() + "-fabric"
     changelog = provider { rootProject.file("CHANGELOG.md").readText() }
     modLoaders.add("fabric")
