@@ -1,3 +1,1 @@
-- Added Forge 1.19.3-1.20.4 variant. (6f44905)
-- Ported to 26.3-snapshot-4. (8b89667)
-- NeoForge builds have been tested to work now. (#1) (6f44905)
+- Made the 1.21.9+ mixin update-proof. The Fabric build for 26.1 and NeoForge build for 1.21.9 now work on 26.3 release. Removed Fabric 26.3-snapshot-4 variant as part of this. (2363a4c)
